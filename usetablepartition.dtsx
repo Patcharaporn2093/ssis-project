@@ -1,0 +1,1224 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="12/21/2024 2:09:36 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="ACER"
+  DTS:CreatorName="Acer\User"
+  DTS:DTSID="{E3EA7F47-A4BA-4934-AB65-C979AF1F029D}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="usetablepartition"
+  DTS:PackageType="5"
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{3F89D991-53E8-48F4-8602-871EBB58974A}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[classicmodels2]"
+      DTS:CreationName="ODBC"
+      DTS:DTSID="{10DE3760-E6A9-44EB-ACBF-22A475A11B7D}"
+      DTS:ObjectName="classicmodels2">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Dsn=classicmodels2;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\delete previous data patition"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{aa211aff-9ba6-4da1-81bd-f45ca7bd3ef3}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="delete previous data patition"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{10DE3760-E6A9-44EB-ACBF-22A475A11B7D}"
+          SQLTask:SqlStatementSource="DELETE FROM partitioned_table_test limit 10;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\delete previous result data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:Disabled="True"
+      DTS:DTSID="{b453a7cb-3328-4885-ae23-0572f08195fd}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="delete previous result data"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{FD4A8E7A-8112-4499-8781-952C8C236B85}"
+          SQLTask:SqlStatementSource="DELETE FROM result_table_testdatapart limit 1000;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\partition"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{f673e4d8-8e62-48f3-b928-03bbfa4b38ea}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="partition"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\partition\ODBC Destination"
+              componentClassID="Microsoft.SSISODBCDst"
+              contactInfo="ODBC Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="ODBC Destination"
+              name="ODBC Destination"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName">result_partitioned_table_test</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the number of rows fetched per batch."
+                  expressionType="Notify"
+                  name="BatchSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows inserted under the same transaction."
+                  expressionType="Notify"
+                  name="TransactionSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds to wait for an SQL statement to execute before returning to the application."
+                  expressionType="Notify"
+                  name="StatementTimeout">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The method used for inserting data. Possible values are 'Batch' or 'Row by row'."
+                  expressionType="Notify"
+                  name="InsertMethod">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="The ODBC C data type for binding numeric data."
+                  expressionType="Notify"
+                  name="BindNumericAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines how the component would bind columns of (multi)-byte string types (i.e., SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). The options are: Unicode (SQL_C_WCHAR) and ANSI (SQL_C_CHAR)."
+                  expressionType="Notify"
+                  name="BindCharColumnsAs">0</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\partition\ODBC Destination.Connections[ODBCConnection]"
+                  connectionManagerID="Package.ConnectionManagers[classicmodels2]"
+                  connectionManagerRefId="Package.ConnectionManagers[classicmodels2]"
+                  description="The ODBC runtime connection used to access the database."
+                  name="ODBCConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="ODBC Destination Input"
+                  truncationRowDisposition="FailComponent">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[id]"
+                      cachedDataType="i4"
+                      cachedName="id"
+                      externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[id]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]" />
+                    <inputColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[product_id]"
+                      cachedDataType="i4"
+                      cachedName="product_id"
+                      externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_id]"
+                      lineageId="Package\partition\72:invalid" />
+                    <inputColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[room]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="room"
+                      externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[room]"
+                      lineageId="Package\partition\75:invalid" />
+                    <inputColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[date_column]"
+                      cachedDataType="dbDate"
+                      cachedName="date_column"
+                      externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[date_column]"
+                      lineageId="Package\partition\78:invalid" />
+                    <inputColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[amount]"
+                      cachedDataType="numeric"
+                      cachedName="amount"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[amount]"
+                      lineageId="Package\partition\81:invalid" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[id]"
+                      dataType="i4"
+                      name="id" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_id]"
+                      dataType="i4"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[room]"
+                      dataType="wstr"
+                      length="10"
+                      name="room" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[date_column]"
+                      dataType="dbDate"
+                      name="date_column" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[amount]"
+                      dataType="numeric"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\partition\ODBC Destination.Outputs[ODBC Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="ODBC Destination Error Output"
+                  synchronousInputId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\partition\ODBC Source"
+              componentClassID="Microsoft.SSISODBCSrc"
+              contactInfo="ODBC Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="ODBC Source"
+              name="ODBC Source"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">WITH CTE AS (
+    SELECT 
+        id,
+        ROW_NUMBER() OVER (
+            PARTITION BY product_id, room, date_column
+            ORDER BY id ASC
+        ) AS row_num
+    FROM partitioned_table_test
+    WHERE date_column = '2024-01-01'
+)
+SELECT *
+FROM CTE
+WHERE row_num = 1;</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the number of rows fetched per batch."
+                  expressionType="Notify"
+                  name="BatchSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines how the component exposes CHAR columns. If False, CHAR columns are exposed as (multi-)byte strings (DT_STR), if True, CHAR columns are exposed as wide strings (DT_WSTR)"
+                  expressionType="Notify"
+                  name="ExposeCharColumnsAsUnicode">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds to wait for an SQL statement to execute before returning to the application."
+                  expressionType="Notify"
+                  name="StatementTimeout">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The method used for fetching data."
+                  expressionType="Notify"
+                  name="FetchMethod">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="The ODBC C data type for binding numeric data."
+                  expressionType="Notify"
+                  name="BindNumericAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines how the component would bind columns of (multi)-byte string types (i.e., SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). The options are: Unicode (SQL_C_WCHAR) and ANSI (SQL_C_CHAR)."
+                  expressionType="Notify"
+                  name="BindCharColumnsAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  expressionType="Notify"
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\partition\ODBC Source.Connections[ODBCConnection]"
+                  connectionManagerID="Package.ConnectionManagers[classicmodels2]"
+                  connectionManagerRefId="Package.ConnectionManagers[classicmodels2]"
+                  description="The ODBC runtime connection used to access the database."
+                  name="ODBCConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\partition\ODBC Source.Outputs[ODBC Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="ODBC Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]"
+                      name="id" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[row_num]"
+                      dataType="ui8"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[row_num]"
+                      name="row_num" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      dataType="i4"
+                      name="id" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
+                      dataType="ui8"
+                      name="row_num" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output]"
+                  isErrorOut="true"
+                  name="ODBC Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[id]"
+                      name="id" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[row_num]"
+                      dataType="ui8"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[row_num]"
+                      name="row_num" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\partition.Paths[ODBC Source Output]"
+              endId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input]"
+              name="ODBC Source Output"
+              startId="Package\partition\ODBC Source.Outputs[ODBC Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\result left join partition"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:Disabled="True"
+      DTS:DTSID="{f657f819-8667-4556-8a0b-d0c326f4d40a}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="result left join partition"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\result left join partition\ODBC Destination"
+              componentClassID="Microsoft.SSISODBCDst"
+              contactInfo="ODBC Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="ODBC Destination"
+              name="ODBC Destination"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName">result_table_testdatapart</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the number of rows fetched per batch."
+                  expressionType="Notify"
+                  name="BatchSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of rows inserted under the same transaction."
+                  expressionType="Notify"
+                  name="TransactionSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds to wait for an SQL statement to execute before returning to the application."
+                  expressionType="Notify"
+                  name="StatementTimeout">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The method used for inserting data. Possible values are 'Batch' or 'Row by row'."
+                  expressionType="Notify"
+                  name="InsertMethod">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="The ODBC C data type for binding numeric data."
+                  expressionType="Notify"
+                  name="BindNumericAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines how the component would bind columns of (multi)-byte string types (i.e., SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). The options are: Unicode (SQL_C_WCHAR) and ANSI (SQL_C_CHAR)."
+                  expressionType="Notify"
+                  name="BindCharColumnsAs">0</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\result left join partition\ODBC Destination.Connections[ODBCConnection]"
+                  connectionManagerID="{FD4A8E7A-8112-4499-8781-952C8C236B85}:invalid"
+                  connectionManagerRefId="{FD4A8E7A-8112-4499-8781-952C8C236B85}:invalid"
+                  description="The ODBC runtime connection used to access the database."
+                  name="ODBCConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="ODBC Destination Input"
+                  truncationRowDisposition="FailComponent">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[id]"
+                      cachedDataType="i4"
+                      cachedName="id"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[product_id]"
+                      cachedDataType="i4"
+                      cachedName="product_id"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[room]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="room"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[room]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[date_column]"
+                      cachedDataType="dbDate"
+                      cachedName="date_column"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[date_column]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[amount]"
+                      cachedDataType="numeric"
+                      cachedName="amount"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[amount]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[product_name]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="product_name"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_name]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_name]" />
+                    <inputColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[category]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="category"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[category]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[category]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[id]"
+                      dataType="i4"
+                      name="id" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_id]"
+                      dataType="i4"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[room]"
+                      dataType="wstr"
+                      length="10"
+                      name="room" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[date_column]"
+                      dataType="dbDate"
+                      name="date_column" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[amount]"
+                      dataType="numeric"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_name]"
+                      dataType="wstr"
+                      length="50"
+                      name="product_name" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[category]"
+                      dataType="wstr"
+                      length="50"
+                      name="category" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\result left join partition\ODBC Destination.Outputs[ODBC Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="ODBC Destination Error Output"
+                  synchronousInputId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\result left join partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\result left join partition\ODBC Destination.Outputs[ODBC Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\result left join partition\ODBC Source"
+              componentClassID="Microsoft.SSISODBCSrc"
+              contactInfo="ODBC Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="ODBC Source"
+              name="ODBC Source"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of the table to be fetched."
+                  expressionType="Notify"
+                  name="TableName"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT 
+    t.id,
+    t.product_id,
+    t.room,
+    t.date_column,
+    t.amount,
+    p.product_name,
+    p.category
+
+FROM testdata_part t
+
+LEFT JOIN product_details p
+
+ON t.product_id = p.product_id;</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the number of rows fetched per batch."
+                  expressionType="Notify"
+                  name="BatchSize">1000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines the chunk size allocation for LOB columns"
+                  expressionType="Notify"
+                  name="LobChunkSize">32768</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines how the component exposes CHAR columns. If False, CHAR columns are exposed as (multi-)byte strings (DT_STR), if True, CHAR columns are exposed as wide strings (DT_WSTR)"
+                  expressionType="Notify"
+                  name="ExposeCharColumnsAsUnicode">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds to wait for an SQL statement to execute before returning to the application."
+                  expressionType="Notify"
+                  name="StatementTimeout">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The code page to use when code page information is unavailable from the data source."
+                  expressionType="Notify"
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Int32"
+                  description="The method used for fetching data."
+                  expressionType="Notify"
+                  name="FetchMethod">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="The ODBC C data type for binding numeric data."
+                  expressionType="Notify"
+                  name="BindNumericAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Determines how the component would bind columns of (multi)-byte string types (i.e., SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). The options are: Unicode (SQL_C_WCHAR) and ANSI (SQL_C_CHAR)."
+                  expressionType="Notify"
+                  name="BindCharColumnsAs">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="The mode used to access the database."
+                  expressionType="Notify"
+                  name="AccessMode"
+                  typeConverter="AccessMode">1</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\result left join partition\ODBC Source.Connections[ODBCConnection]"
+                  connectionManagerID="{FD4A8E7A-8112-4499-8781-952C8C236B85}:invalid"
+                  connectionManagerRefId="{FD4A8E7A-8112-4499-8781-952C8C236B85}:invalid"
+                  description="The ODBC runtime connection used to access the database."
+                  name="ODBCConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output]"
+                  errorRowDisposition="FailComponent"
+                  name="ODBC Source Output"
+                  truncationRowDisposition="FailComponent">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[id]"
+                      name="id" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]"
+                      name="product_id" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      length="10"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]"
+                      name="room" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]"
+                      dataType="dbDate"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]"
+                      name="date_column" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_name]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_name]"
+                      length="50"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_name]"
+                      name="product_name" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[category]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[category]"
+                      length="50"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].Columns[category]"
+                      name="category" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      dataType="i4"
+                      name="id" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      dataType="i4"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      dataType="wstr"
+                      length="10"
+                      name="room" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      dataType="dbDate"
+                      name="date_column" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      dataType="numeric"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_name]"
+                      dataType="wstr"
+                      length="50"
+                      name="product_name" />
+                    <externalMetadataColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[category]"
+                      dataType="wstr"
+                      length="50"
+                      name="category" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output]"
+                  isErrorOut="true"
+                  name="ODBC Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[id]"
+                      name="id" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_id]"
+                      name="product_id" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[room]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      length="10"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[room]"
+                      name="room" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[date_column]"
+                      dataType="dbDate"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[date_column]"
+                      name="date_column" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[amount]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[amount]"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_name]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_name]"
+                      length="50"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_name]"
+                      name="product_name" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[category]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[category]"
+                      length="50"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[category]"
+                      name="category" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\result left join partition\Row Count"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+              name="Row Count">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable to hold the row count."
+                  name="VariableName">User::rowcountleftjoin</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\result left join partition\Row Count.Inputs[Row Count Input 1]"
+                  hasSideEffects="true"
+                  name="Row Count Input 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\result left join partition\Row Count.Outputs[Row Count Output 1]"
+                  name="Row Count Output 1"
+                  synchronousInputId="Package\result left join partition\Row Count.Inputs[Row Count Input 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\result left join partition.Paths[ODBC Source Output]"
+              endId="Package\result left join partition\Row Count.Inputs[Row Count Input 1]"
+              name="ODBC Source Output"
+              startId="Package\result left join partition\ODBC Source.Outputs[ODBC Source Output]" />
+            <path
+              refId="Package\result left join partition.Paths[Row Count Output 1]"
+              endId="Package\result left join partition\ODBC Destination.Inputs[ODBC Destination Input]"
+              name="Row Count Output 1"
+              startId="Package\result left join partition\Row Count.Outputs[Row Count Output 1]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\rowcount_partition"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:Disabled="True"
+      DTS:DTSID="{97bc611f-22c1-4711-a128-a707e2889a01}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="rowcount_partition"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{22319578-3c1c-4609-90b6-cd8acb72490f}"
+      DTS:From="Package\delete previous data patition"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\partition" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{9d771d69-b619-496e-baaa-fddc19eaca63}"
+      DTS:From="Package\partition"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\rowcount_partition" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{c2f8fe3b-f84d-4a2a-89e8-ab8091e49777}"
+      DTS:From="Package\rowcount_partition"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\delete previous result data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{d13a69fb-a50d-426c-9737-897669b9693a}"
+      DTS:From="Package\delete previous result data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\result left join partition" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="212.8,41.6"
+          Id="Package\delete previous data patition"
+          TopLeft="283.571429047354,47.7647058930776" />
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\delete previous result data"
+          TopLeft="275.714286173485,265.705882172632" />
+        <NodeLayout
+          Size="117.6,41.6"
+          Id="Package\partition"
+          TopLeft="311.428571963798,111.99999995442" />
+        <NodeLayout
+          Size="185.6,41.6"
+          Id="Package\result left join partition"
+          TopLeft="290.714286205417,346.764705630993" />
+        <NodeLayout
+          Size="167.2,41.6"
+          Id="Package\rowcount_partition"
+          TopLeft="293.571429068641,192.294117531098" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="389.971429047354,89.3647058930776">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-19.7428570835566,22.6352940613423"
+              Start="0,0"
+              End="-19.7428570835566,15.1352940613423">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,7.3176470306712" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,7.3176470306712"
+                    Point2="0,11.3176470306712"
+                    Point3="-4,11.3176470306712" />
+                  <mssgle:LineSegment
+                    End="-15.7428570835566,11.3176470306712" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-15.7428570835566,11.3176470306712"
+                    Point2="-19.7428570835566,11.3176470306712"
+                    Point3="-19.7428570835566,15.3176470306712" />
+                  <mssgle:LineSegment
+                    End="-19.7428570835566,15.1352940613423" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="373.70000051622,153.59999995442">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.694117576678"
+              Start="0,0"
+              End="0,31.194117576678">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.194117576678" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="377.242857621063,233.894117531098">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.8117646415341"
+              Start="0,0"
+              End="0,24.3117646415341">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.3117646415341" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="380.414286189451,307.305882172632">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.4588234583605"
+              Start="0,0"
+              End="0,31.9588234583605">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.9588234583605" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\partition">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="141.6,41.6"
+          Id="Package\partition\ODBC Source"
+          TopLeft="350.714286460864,89.4705881568697" />
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\partition\ODBC Destination"
+          TopLeft="340.000000723771,245.47058802013" />
+        <EdgeLayout
+          Id="Package\partition.Paths[ODBC Source Output]"
+          TopLeft="421.357143592317,131.07058815687">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,114.39999986326"
+              Start="0,0"
+              End="0,106.89999986326">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,106.89999986326" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,45.4499999316301,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\partition\ODBC Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\partition\ODBC Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\result left join partition">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="129.6,41.6"
+          Id="Package\result left join partition\Row Count"
+          TopLeft="486.999992743135,218.999996736646" />
+        <NodeLayout
+          Size="141.6,41.6"
+          Id="Package\result left join partition\ODBC Source"
+          TopLeft="473.99999293685,104.999998435378" />
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\result left join partition\ODBC Destination"
+          TopLeft="498.999992564321,327.999995112419" />
+        <EdgeLayout
+          Id="Package\result left join partition.Paths[Row Count Output 1]"
+          TopLeft="551.799992743135,260.599996736646">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="28.3999998211862,67.3999983757734"
+              Start="0,0"
+              End="28.3999998211862,59.8999983757734">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.6999991878867" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.6999991878867"
+                    Point2="0,33.6999991878867"
+                    Point3="4,33.6999991878867" />
+                  <mssgle:LineSegment
+                    End="24.3999998211862,33.6999991878867" />
+                  <mssgle:CubicBezierSegment
+                    Point1="24.3999998211862,33.6999991878867"
+                    Point2="28.3999998211862,33.6999991878867"
+                    Point3="28.3999998211862,37.6999991878867" />
+                  <mssgle:LineSegment
+                    End="28.3999998211862,59.8999983757734" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\result left join partition.Paths[ODBC Source Output]"
+          TopLeft="548.299992839992,146.599998435378">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.3999983012677"
+              Start="0,0"
+              End="0,64.8999983012677">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.8999983012677" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
