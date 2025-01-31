@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="usetablepartition"
   DTS:PackageType="5"
-  DTS:VersionBuild="6"
-  DTS:VersionGUID="{3F89D991-53E8-48F4-8602-871EBB58974A}">
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{38B95AD1-9BE7-4278-9433-AF9D8C81368F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -161,20 +161,20 @@
                       cachedDataType="i4"
                       cachedName="product_id"
                       externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[product_id]"
-                      lineageId="Package\partition\72:invalid" />
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]" />
                     <inputColumn
                       refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[room]"
                       cachedDataType="wstr"
                       cachedLength="10"
                       cachedName="room"
                       externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[room]"
-                      lineageId="Package\partition\75:invalid" />
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]" />
                     <inputColumn
                       refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[date_column]"
                       cachedDataType="dbDate"
                       cachedName="date_column"
                       externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[date_column]"
-                      lineageId="Package\partition\78:invalid" />
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]" />
                     <inputColumn
                       refId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].Columns[amount]"
                       cachedDataType="numeric"
@@ -182,7 +182,7 @@
                       cachedPrecision="10"
                       cachedScale="2"
                       externalMetadataColumnId="Package\partition\ODBC Destination.Inputs[ODBC Destination Input].ExternalColumns[amount]"
-                      lineageId="Package\partition\81:invalid" />
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -258,13 +258,16 @@
                   name="SqlCommand"
                   UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">WITH CTE AS (
     SELECT 
-        id,
+        id, product_id,
+        room,
+        date_column, 
+        amount,
         ROW_NUMBER() OVER (
             PARTITION BY product_id, room, date_column
             ORDER BY id ASC
         ) AS row_num
     FROM partitioned_table_test
-    WHERE date_column = '2024-01-01'
+    WHERE date_column = '2023-11-01'
 )
 SELECT *
 FROM CTE
@@ -343,6 +346,33 @@ WHERE row_num = 1;</property>
                       externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
                       lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[row_num]"
                       name="row_num" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      length="10"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[room]"
+                      name="room" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]"
+                      dataType="dbDate"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[date_column]"
+                      name="date_column" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[amount]"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Output].Columns[product_id]"
+                      name="product_id" />
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -354,6 +384,25 @@ WHERE row_num = 1;</property>
                       refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
                       dataType="ui8"
                       name="row_num" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      dataType="wstr"
+                      length="10"
+                      name="room" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      dataType="dbDate"
+                      name="date_column" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      dataType="numeric"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      dataType="i4"
+                      name="product_id" />
                   </externalMetadataColumns>
                 </output>
                 <output
@@ -373,6 +422,33 @@ WHERE row_num = 1;</property>
                       externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[row_num]"
                       lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[row_num]"
                       name="row_num" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[room]"
+                      dataType="wstr"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[room]"
+                      length="10"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[room]"
+                      name="room" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[date_column]"
+                      dataType="dbDate"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[date_column]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[date_column]"
+                      name="date_column" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[amount]"
+                      dataType="numeric"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[amount]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[amount]"
+                      name="amount"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_id]"
+                      dataType="i4"
+                      externalMetadataColumnId="Package\partition\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[product_id]"
+                      lineageId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[product_id]"
+                      name="product_id" />
                     <outputColumn
                       refId="Package\partition\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
@@ -1083,63 +1159,40 @@ ON t.product_id = p.product_id;</property>
     design-time-name="Package\partition">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="141.6,41.6"
           Id="Package\partition\ODBC Source"
-          TopLeft="350.714286460864,89.4705881568697" />
+          TopLeft="343.571429302802,97.5882352331209" />
         <NodeLayout
           Size="162.4,41.6"
           Id="Package\partition\ODBC Destination"
-          TopLeft="340.000000723771,245.47058802013" />
+          TopLeft="326.428572123452,169.764705733548" />
         <EdgeLayout
           Id="Package\partition.Paths[ODBC Source Output]"
-          TopLeft="421.357143592317,131.07058815687">
+          TopLeft="411.000000713127,139.188235233121">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,114.39999986326"
+              EndConnector="0,30.5764705004267"
               Start="0,0"
-              End="0,106.89999986326">
+              End="0,23.0764705004267">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,106.89999986326" />
+                    End="0,23.0764705004267" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-8,45.4499999316301,16,16"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\partition\ODBC Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\partition\ODBC Destination">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\result left join partition">
     <LayoutInfo>
@@ -1220,5 +1273,26 @@ ON t.product_id = p.product_id;</property>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\partition\ODBC Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\partition\ODBC Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>
